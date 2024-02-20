@@ -1,0 +1,47 @@
+syntax = "proto3";
+
+package UserService;
+
+option go_package = "GoAuth/greet/proto";
+
+// protoc -ICRUD/proto --go_out=.  --go_opt=module=go-grpc --go-grpc_out=. --go-grpc_opt=module=go-grpc CRUD/proto/UserService.proto
+
+service Greet{
+  rpc CreatUser(CreateUserRequest) returns (CreateUserResponse);
+  rpc GetUser(GetUserRequest) returns (GetUserResponse);
+  rpc UpdateUser(UpdateUserRequest) returns (UpdateUserResponse);
+}
+
+message User{
+  int64 id = 1;
+  string first_name = 2;
+  string last_name = 3;
+  int64 age = 4;
+}
+
+message CreateUserRequest{
+  User user = 1;
+}
+
+message CreateUserResponse{
+  string token = 1;
+  string message = 2;
+}
+
+message GetUserRequest{
+  int64 id = 1;
+}
+
+message GetUserResponse{
+  User user = 1;
+}
+
+message UpdateUserRequest{
+  int64 id = 1;
+  User User = 2;
+}
+
+message UpdateUserResponse{
+  string message = 1;
+}
+
