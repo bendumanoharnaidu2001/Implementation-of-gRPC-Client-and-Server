@@ -93,7 +93,7 @@ func (s *Server) CreatUser(ctx context.Context, req *pb.CreateUserRequest) (*pb.
 
 	res := s.DB.Create(&users)
 	if res.RowsAffected == 0 {
-		return nil, errors.New("movie creation unsuccessful")
+		return nil, errors.New("user creation unsuccessful")
 	}
 
 	response := &pb.CreateUserResponse{
@@ -102,5 +102,43 @@ func (s *Server) CreatUser(ctx context.Context, req *pb.CreateUserRequest) (*pb.
 	}
 
 	return response, nil
+}
 
+func (s *Server) GetUser(ctx context.Context, req *pb.GetUserRequest) (*pb.GetUserResponse, error) {
+
+	id := req.Id
+	var user *pb.User
+	s.DB.First(&user, id)
+
+	if user.Id == 0 {
+		return nil, errors.New("user not found")
+	}
+
+	response := &pb.GetUserResponse{
+		User: user,
+	}
+	return response, nil
+}
+
+func (s *Server) UpdateUser(ctx context.Context, req *pb.UpdateUserRequest) (*pb.UpdateUserResponse, error) {
+	usr := req.User
+	id := req.Id
+
+	var user *pb.User
+	s.DB.First(&user, id)
+
+	if user.Id == 0 {
+		return nil, errors.New("User not found")
+	}
+
+	user.FirstName = usr.FirstName
+	user.LastName = usr.LastName
+	user.Age = usr.Age
+
+	s.DB.Save(&user)
+
+	response := &pb.UpdateUserResponse{
+		Message: "User Successfully updated",
+	}
+	return response, nil
 }
